@@ -1,13 +1,13 @@
 import ast
 
 from aiogram import Router, F
-from aiogram.filters import Command, Filter, StateFilter
+from aiogram.filters import Command, StateFilter
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.utils.media_group import MediaGroupBuilder
 
-from src.const import const_ru
-from src.config import Admin, get_admins, bot_username
+from app.const import const_ru
+from app.config import Admin, get_admins, bot_username
 from loader import bot
 
 from app.utils.states import AddSupport, Verification, EditBalance

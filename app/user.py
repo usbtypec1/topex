@@ -1,9 +1,6 @@
-import asyncio
 import traceback
 from datetime import datetime
-from aiogram import Bot
 from aiogram import Router, F
-from aiogram.utils.deep_linking import decode_payload
 from aiogram.filters import CommandStart, CommandObject
 from aiogram.types import Message, CallbackQuery, InlineQuery, InlineQueryResultArticle, InputTextMessageContent
 from aiogram.fsm.context import FSMContext
@@ -11,12 +8,11 @@ from aiogram.fsm.context import FSMContext
 from src.middlewares import AlbumMiddleware
 
 from app.database.requests import add_user, get_user
-from app.utils.strings import check_format, personal_disc, instruction_text, \
+from app.utils.strings import personal_disc, instruction_text, \
     user_info, validate_and_format_phone, adress_text, registration_text, \
     edit_user_text, user_personal_area
 from app.utils.states import Registration, EditData, AddPromo, Verification, Delivery, Search
-from src.config import bot_username
-from src.const import const_ru
+from app.const import const_ru
 from loader import bot
 import app.database.requests as db
 import app.user_keyboards as kb

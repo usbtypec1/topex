@@ -1,11 +1,9 @@
 from aiogram import Bot, Dispatcher
-from aiogram.enums import ParseMode
 
-from aiogram.fsm.storage.memory import MemoryStorage
 from redis.asyncio import Redis
 from aiogram.fsm.storage.redis import RedisStorage
 
-from src.config import TOKEN
+from app.config import TOKEN
 
 bot = Bot(
     token=TOKEN

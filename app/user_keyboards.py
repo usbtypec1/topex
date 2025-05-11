@@ -1,9 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardButton, SwitchInlineQueryChosenChat
-from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 import app.database.requests as db
-from src.const import const_ru
-from src.config import reg_web, channel_link
+from app.const import const_ru
+from app.config import reg_web, channel_link
 
 contact_kb = ReplyKeyboardMarkup(keyboard=[
     [KeyboardButton(text='Отправить номер ☎️', request_contact=True)]

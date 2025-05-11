@@ -2,9 +2,7 @@ import re
 
 
 import app.database.requests as db
-from src.const import const_ru
 from aiogram import Bot
-from loader import bot
 
 
 async def registration_text(fullname=None, city=None, pickup_point=None, phone=None, promocode=None):

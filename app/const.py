@@ -1,6 +1,6 @@
 import json
 
-from src.config import DIR
+from app.config import DIR
 
 json_file = open(f"{DIR}/src/const.json", encoding='utf-8')
 const_file = json.loads(json_file.read())

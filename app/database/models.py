@@ -1,10 +1,9 @@
-from sqlalchemy import BigInteger, DateTime
-from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
+from sqlalchemy import BigInteger
+from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-from sqlalchemy import select
 
-from src.config import SQLALCHEMY_URL
-from sqlalchemy import ForeignKey
+from app.config import SQLALCHEMY_URL
+
 
 engine = create_async_engine(SQLALCHEMY_URL, echo=False)
 

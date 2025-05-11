@@ -1,17 +1,17 @@
-import sys
-import logging
 import asyncio
-import threading
-
-from loader import bot, dp
-from app.utils.sheets import UpdateUserDataSheets, GetAllParcelData, GetNewAdress, GetMailingMessage, GetParcelsFromStorage
-from app.utils.strings import UpdateUserDiscount, UpdateUsersType
-from app.database.models import async_main
-from app import user
-from app import admin
+import logging
+import sys
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.schedulers.background import BackgroundScheduler
+
+from app import admin, user
+from app.database.models import async_main
+from app.utils.sheets import (
+    GetAllParcelData, GetMailingMessage, GetNewAdress,
+    GetParcelsFromStorage, UpdateUserDataSheets,
+)
+from app.utils.strings import UpdateUserDiscount, UpdateUsersType
+from loader import bot, dp
 
 
 async def scheduler_jobs():
