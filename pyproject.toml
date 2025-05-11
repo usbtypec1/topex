@@ -1,0 +1,14 @@
+[project]
+name = "topex"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram>=3.20.0.post0",
+    "aiosqlite>=0.21.0",
+    "apscheduler>=3.11.0",
+    "gspread>=6.2.0",
+    "pytz>=2025.2",
+    "sqlalchemy[greenlet]>=2.0.40",
+]
