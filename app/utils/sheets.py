@@ -1,21 +1,13 @@
-import os.path
-import gspread
 import datetime
 import time
-
 from collections import defaultdict
 
-from google.auth.transport.requests import Request
-from google.oauth2.service_account import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-
 from aiogram import Bot
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
 
-from loader import bot
-from app.utils.strings import clean_number
 import app.database.requests as db
+from app.utils.strings import clean_number
 
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]

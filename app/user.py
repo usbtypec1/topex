@@ -11,7 +11,7 @@ from app.database.requests import add_user, get_user
 from app.utils.strings import personal_disc, instruction_text, \
     user_info, validate_and_format_phone, adress_text, registration_text, \
     edit_user_text, user_personal_area
-from app.utils.states import Registration, EditData, AddPromo, Verification, Delivery, Search
+from app.states import Registration, EditData, AddPromo, Verification, Delivery, Search
 from app.const import const_ru
 from loader import bot
 import app.database.requests as db

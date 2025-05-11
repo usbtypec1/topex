@@ -10,7 +10,7 @@ from app.const import const_ru
 from app.config import Admin, get_admins, bot_username
 from loader import bot
 
-from app.utils.states import AddSupport, Verification, EditBalance
+from app.states import AddSupport, Verification, EditBalance
 import app.database.requests as db
 import app.admin_keyboards as kb
 

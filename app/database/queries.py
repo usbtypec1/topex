@@ -1,11 +1,12 @@
-import asyncio
 import datetime
 
-from app.database.models import UserData, ParcelData, PromocodeData, \
-    SupportLinks, Verification, Adress, Managers, PickUpPoint, \
-    FirstActivation, async_session
-from sqlalchemy import Column, Integer, String, Float, Boolean, ForeignKey
-from sqlalchemy import select, desc
+from sqlalchemy import select
+
+from app.database.models import (
+    Adress, async_session, FirstActivation,
+    Managers, ParcelData, PickUpPoint, PromocodeData, SupportLinks, UserData,
+    Verification,
+)
 
 
 # ПУНКТЫ ВЫДАЧИ
