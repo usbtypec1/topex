@@ -1,59 +1,29 @@
-import configparser
-import asyncio
-import os
-
-from aiogram.filters import Filter
-from aiogram.types import Message
-
-DIR = os.path.abspath(__file__)[:-14]
-
-config = configparser.ConfigParser()
-config.read(f"{DIR}/settings.ini")
-SQLALCHEMY_URL = config["SqlAlchemy"]["SQLALCHEMY_URL"]
-
-TOKEN = config["Telegram"]["TOKEN"]
-
-bot_username = config["Telegram"]["USERNAME"]
-
-reg_web = config["Telegram"]["reg_web"]
-channel_link = config["Telegram"]["channel_link"]
+import pathlib
+import tomllib
+from dataclasses import dataclass
+from functools import lru_cache
+from typing import Final
 
 
-def get_admins():
-    get_id = config["Telegram"]["ADMINS"]
-    ADMIN_ID = []
-
-    if "," in get_id:
-        get_id = get_id.split(",")
-        for a in get_id:
-            ADMIN_ID.append(str(a))
-    else:
-        try:
-            ADMIN_ID = [str(get_id)]
-        except ValueError:
-            ADMIN_ID = [0]
-            print("Не указан Admin_ID")
-    return ADMIN_ID
+ROOT_PATH: Final[pathlib.Path] = pathlib.Path(__file__).parent.parent
+CONFIG_FILE_PATH = ROOT_PATH / "config.toml"
 
 
-class Admin(Filter):
-    def __init__(self):
-        get_id = config["Telegram"]["ADMINS"]
-        ADMIN_ID = []
+@dataclass
+class Config:
+    telegram_bot_token: str
+    admin_user_ids: set[int]
+    main_channel_url: str
+    learning_chanel_url: str
 
-        if "," in get_id:
-            get_id = get_id.split(",")
-            for a in get_id:
-                ADMIN_ID.append(str(a))
-        else:
-            try:
-                ADMIN_ID = [str(get_id)]
-            except ValueError:
-                ADMIN_ID = [0]
-                print("Не указан Admin_ID")
-        
-        self.admins = ADMIN_ID
 
-    async def __call__(self, message: Message):
-        return str(message.from_user.id) in self.admins
+@lru_cache
+def load_config() -> Config:
+    config = tomllib.loads(CONFIG_FILE_PATH.read_text(encoding='utf-8'))
 
+    return Config(
+        telegram_bot_token=config["telegram"]["bot_token"],
+        admin_user_ids=set(config["telegram"]["admin_user_ids"]),
+        main_channel_url=config["telegram"]["main_channel_url"],
+        learning_chanel_url=config["telegram"]["learning_chanel_url"],
+    )

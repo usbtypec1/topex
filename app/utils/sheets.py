@@ -6,13 +6,14 @@ from aiogram import Bot
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-import app.database.requests as db
+import app.database.queries as db
 from app.utils.strings import clean_number
+from config import ROOT_PATH
 
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SAMPLE_SPREADSHEET_ID = "1gp3KJYHLHB4tOR-yJVPwTeUYmfBoLYZHuuSEYlvnyGg"
-creds = Credentials.from_service_account_file("/root/bot/credentials.json", scopes=SCOPES)
+creds = Credentials.from_service_account_file(ROOT_PATH / 'credentials.json', scopes=SCOPES)
 
 
 async def GetNewAdress():
@@ -147,7 +148,6 @@ async def GetParcelsFromStorage(bot: Bot):
 
     values = result.get("values", [])
 
-    data_to_sheets = []
     data = defaultdict(lambda: {"items": [], "total_price": 0, "total_weight": 0})
     new_status_data = defaultdict(lambda: {"items": []})
 

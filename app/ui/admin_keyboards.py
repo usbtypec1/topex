@@ -1,8 +1,8 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-import app.database.requests as db
 from app.const import const_ru
+from database.queries import DatabaseRepository
 
 
 async def cancel(data: str):
@@ -56,10 +56,13 @@ async def admin_pickup_points():
     return keyboard.as_markup()
 
 
-async def admin_pickup_point(city: str):
+async def admin_pickup_point(
+        city: str,
+        database_repository: DatabaseRepository,
+):
     keyboard = InlineKeyboardBuilder()
 
-    points = await db.get_pickup_points(city)
+    points = await database_repository.get_pickup_points(city)
 
     for point in points:
         point_btn = InlineKeyboardButton(text=point.adress, callback_data=f'admin_point_{point.id}')
@@ -73,10 +76,10 @@ async def admin_pickup_point(city: str):
     return keyboard.as_markup()
 
 
-async def admin_point(id: int):
+async def admin_point(id: int, database_repository: DatabaseRepository):
     keyboard = InlineKeyboardBuilder()
 
-    point = await db.get_pickup_point(id)
+    point = await database_repository.get_pickup_point(id)
 
     delete = InlineKeyboardButton(text=const_ru['delete'], callback_data=f'delete_point_{id}')
     back = InlineKeyboardButton(text=const_ru['back'], callback_data=f'admin_pickup_point:{point.city}')
@@ -95,8 +98,8 @@ async def cncl_add_sprt():
     return keyboard.as_markup()
 
 
-async def admin_supports_kb():
-    supports = await db.get_supports()
+async def admin_supports_kb(database_repository: DatabaseRepository):
+    supports = await database_repository.get_supports()
 
     keyboard = InlineKeyboardBuilder()
     for support in supports:
@@ -113,8 +116,8 @@ async def admin_supports_kb():
     return keyboard.as_markup()
 
 
-async def admin_supports_del_kb():
-    supports = await db.get_supports()
+async def admin_supports_del_kb(database_repository: DatabaseRepository):
+    supports = await database_repository.get_supports()
 
     keyboard = InlineKeyboardBuilder()
     for support in supports:

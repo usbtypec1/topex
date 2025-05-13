@@ -1,16 +1,8 @@
 from sqlalchemy import BigInteger
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
-from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine
-
-from app.config import SQLALCHEMY_URL
 
 
-engine = create_async_engine(SQLALCHEMY_URL, echo=False)
-
-async_session = async_sessionmaker(engine)
-
-
-class Base(AsyncAttrs, DeclarativeBase):
+class Base(DeclarativeBase):
     pass
 
 
@@ -105,8 +97,3 @@ class Adress(Base):
     taobao_example: Mapped[str] = mapped_column(nullable=True)
     _1688_example: Mapped[str] = mapped_column(nullable=True)
     poizon_example: Mapped[str] = mapped_column(nullable=True)
-
-
-async def async_main():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)

@@ -1,7 +1,7 @@
 import re
 
 
-import app.database.requests as db
+import app.database.queries as db
 from aiogram import Bot
 
 

@@ -1,11 +1,29 @@
 import asyncio
-from typing import Any, Dict, Union
-
 from typing import *
+
 from aiogram import BaseMiddleware
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+
+from database.queries import DatabaseRepository
+
+
+class DatabaseRepositoryMiddleware(BaseMiddleware):
+
+    def __init__(self, session_factory: async_sessionmaker[AsyncSession]):
+        self.__session_factory = session_factory
+
+    async def __call__(
+            self, handler, event: Message, data: Dict[str, Any]
+    ) -> Any:
+        async with self.__session_factory() as session:
+            data['session'] = session
+            data['database_repository'] = DatabaseRepository(session)
+            return await handler(event, data)
+
 
 class AlbumMiddleware(BaseMiddleware):
+
     def __init__(self, latency: Union[int, float] = 0.1):
 
         self.latency = latency
@@ -23,7 +41,9 @@ class AlbumMiddleware(BaseMiddleware):
 
         return len(self.album_data[event.media_group_id]["messages"])
 
-    async def __call__(self, handler, event: Message, data: Dict[str, Any]) -> Any:
+    async def __call__(
+            self, handler, event: Message, data: Dict[str, Any]
+    ) -> Any:
         """
         Main middleware logic.
         """
@@ -34,7 +54,7 @@ class AlbumMiddleware(BaseMiddleware):
         total_before = self.collect_album_messages(event)
 
         await asyncio.sleep(self.latency)
-        
+
         total_after = len(self.album_data[event.media_group_id]["messages"])
 
         if total_before != total_after:

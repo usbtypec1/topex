@@ -1,11 +1,13 @@
 import json
 
-from app.config import DIR
+from config import ROOT_PATH
 
-json_file = open(f"{DIR}/src/const.json", encoding='utf-8')
-const_file = json.loads(json_file.read())
+
+JSON_FILE_PATH = ROOT_PATH / 'const.json'
+const_file = json.loads(JSON_FILE_PATH.read_text(encoding="utf-8"))
 
 const_ru: dict = const_file["ru"]
+
 
 def is_const(word):
     for value in const_ru.values():
