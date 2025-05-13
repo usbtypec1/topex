@@ -13,7 +13,7 @@ from config import load_config
 from database.repository import DatabaseRepository
 
 
-admin_router = Router()
+router = Router()
 
 
 def admin_filter(message_or_callback_query: Message | CallbackQuery) -> bool:
@@ -21,7 +21,7 @@ def admin_filter(message_or_callback_query: Message | CallbackQuery) -> bool:
     return message_or_callback_query.from_user.id in config.admin_user_ids
 
 
-@admin_router.message(admin_filter, Command('admin'))
+@router.message(admin_filter, Command('admin'))
 async def start(message: Message):
     await message.answer(
         'Админ-панель:', reply_markup=await kb.admin_main_menu()
@@ -29,7 +29,7 @@ async def start(message: Message):
     await message.delete()
 
 
-@admin_router.callback_query(
+@router.callback_query(
     admin_filter, F.data.startswith('admin_main_menu')
 )
 async def cstart(callback_query: CallbackQuery):
@@ -38,7 +38,7 @@ async def cstart(callback_query: CallbackQuery):
     )
 
 
-@admin_router.callback_query(admin_filter, F.data == 'edit_pickup_points')
+@router.callback_query(admin_filter, F.data == 'edit_pickup_points')
 async def pickup_points(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         'Редактирование пунктов самовывоза:',
@@ -46,7 +46,7 @@ async def pickup_points(callback_query: CallbackQuery):
     )
 
 
-@admin_router.callback_query(
+@router.callback_query(
     admin_filter, F.data.startswith('admin_pickup_point:')
 )
 async def pickup_point(
@@ -64,7 +64,7 @@ async def pickup_point(
     )
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('add_point_'))
+@router.callback_query(admin_filter, F.data.startswith('add_point_'))
 async def add_point(callback_query: CallbackQuery, state: FSMContext):
     city = callback_query.data.split('_')[2]
 
@@ -80,7 +80,7 @@ async def add_point(callback_query: CallbackQuery, state: FSMContext):
     await state.set_state('PickUpPoint.Adress')
 
 
-@admin_router.message(admin_filter, StateFilter('PickUpPoint.Adress'), F.text)
+@router.message(admin_filter, StateFilter('PickUpPoint.Adress'), F.text)
 async def address(
         message: Message, state: FSMContext, bot: Bot,
         database_repository: DatabaseRepository,
@@ -102,7 +102,7 @@ async def address(
     await message.delete()
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('admin_point_'))
+@router.callback_query(admin_filter, F.data.startswith('admin_point_'))
 async def admin_point(
         callback_query: CallbackQuery,
         bot: Bot,
@@ -124,7 +124,7 @@ async def admin_point(
     )
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('delete_point_'))
+@router.callback_query(admin_filter, F.data.startswith('delete_point_'))
 async def delete_point(
         callback_query: CallbackQuery,
         database_repository: DatabaseRepository,
@@ -152,21 +152,21 @@ async def delete_point(
         )
 
 
-@admin_router.callback_query(admin_filter, F.data == 'admin_support')
+@router.callback_query(admin_filter, F.data == 'admin_support')
 async def support(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         'Поддержка:', reply_markup=await kb.admin_supports_kb()
     )
 
 
-@admin_router.callback_query(admin_filter, F.data == 'cncl_add_sprt')
+@router.callback_query(admin_filter, F.data == 'cncl_add_sprt')
 async def cncl_add_sprt(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer('Отмена 🔸')
     await support(callback_query)
     await state.clear()
 
 
-@admin_router.callback_query(admin_filter, F.data == 'add_support')
+@router.callback_query(admin_filter, F.data == 'add_support')
 async def add_support(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.message.edit_text(
         'Введите название:', reply_markup=await kb.cncl_add_sprt()
@@ -175,7 +175,7 @@ async def add_support(callback_query: CallbackQuery, state: FSMContext):
     await state.set_state(AddSupport.Name)
 
 
-@admin_router.message(AddSupport.Name)
+@router.message(AddSupport.Name)
 async def add_support_name(message: Message, bot: Bot, state: FSMContext):
     data = await state.get_data()
     message_id = data.get("message_id")
@@ -198,7 +198,7 @@ async def add_support_name(message: Message, bot: Bot, state: FSMContext):
     await message.delete()
 
 
-@admin_router.message(AddSupport.Link)
+@router.message(AddSupport.Link)
 async def add_support_link(
         message: Message,
         bot: Bot,
@@ -233,7 +233,7 @@ async def add_support_link(
     await message.delete()
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('del_supp_'))
+@router.callback_query(admin_filter, F.data.startswith('del_supp_'))
 async def delete_support(
         callback_query: CallbackQuery,
         database_repository: DatabaseRepository,
@@ -285,7 +285,7 @@ async def send_verify_msg(
         )
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('admin_verify_'))
+@router.callback_query(admin_filter, F.data.startswith('admin_verify_'))
 async def verify_check(
         callback_query: CallbackQuery,
         state: FSMContext,
@@ -305,7 +305,7 @@ async def verify_check(
                                                         f'{response}',
                 reply_markup=None, parse_mode='HTML'
             )
-            from app.user import user_verify_notify
+            from handlers.user import user_verify_notify
             await user_verify_notify(
                 verify_id, state, database_repository, bot
             )
@@ -333,7 +333,7 @@ async def verify_check(
         )
 
 
-@admin_router.message(Verification.response)
+@router.message(Verification.response)
 async def verify_response(
         message: Message,
         bot: Bot,
@@ -366,7 +366,7 @@ async def verify_response(
         parse_mode='HTML'
     )
 
-    from app.user import user_verify_notify
+    from handlers.user import user_verify_notify
     await user_verify_notify(verify_id, state, database_repository, bot)
     await state.clear()
 
@@ -388,7 +388,7 @@ async def send_delivery_message(
         await bot.send_message(admin, msg_text, parse_mode='Markdown')
 
 
-@admin_router.callback_query(admin_filter, F.data.startswith('balance_'))
+@router.callback_query(admin_filter, F.data.startswith('balance_'))
 async def edit_balance(callback_query: CallbackQuery, state: FSMContext):
     action = callback_query.data.split('_')[1]
     user_uid = callback_query.data.split('_')[2]
@@ -410,7 +410,7 @@ async def edit_balance(callback_query: CallbackQuery, state: FSMContext):
     await state.set_state(EditBalance.Amount)
 
 
-@admin_router.callback_query(
+@router.callback_query(
     admin_filter, F.data.startswith('cancel_edit_balance_')
 )
 async def cncl_edit_balance(
@@ -427,7 +427,7 @@ async def cncl_edit_balance(
     await state.clear()
 
 
-@admin_router.message(EditBalance.Amount)
+@router.message(EditBalance.Amount)
 async def edit_balance_amount(
         mess: Message,
         state: FSMContext,
@@ -478,7 +478,7 @@ async def edit_balance_amount(
         await state.set_state(EditBalance.Amount)
 
 
-@admin_router.message(admin_filter, F.text.startswith('UK'))
+@router.message(admin_filter, F.text.startswith('UK'))
 async def search_user(
         message: Message, bot: Bot,
         database_repository: DatabaseRepository,
@@ -530,7 +530,7 @@ async def search_user(
         await bot.delete_message(admin_id, message.message_id)
 
 
-@admin_router.message(admin_filter, Command('delete_user'))
+@router.message(admin_filter, Command('delete_user'))
 async def delete_user(
         message: Message,
         database_repository: DatabaseRepository,

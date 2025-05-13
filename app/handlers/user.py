@@ -572,7 +572,7 @@ async def verify_photo(
     )
 
     await state.clear()
-    from app.admin import send_verify_msg
+    from handlers.admin import send_verify_msg
     await send_verify_msg(verify.id, bot, database_repository)
     if new_message_id:
         await bot.delete_message(
@@ -1242,7 +1242,7 @@ async def delivery_address(
     except:
         print(traceback.format_exc())
 
-    from app.admin import send_delivery_message
+    from handlers.admin import send_delivery_message
     await send_delivery_message(user_id, adress, bot, database_repository)
 
     await state.clear()

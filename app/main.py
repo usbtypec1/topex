@@ -3,16 +3,14 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.fsm.storage.redis import RedisStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
-from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import (
     async_sessionmaker, AsyncEngine, create_async_engine,
 )
 
-from app import admin, user
+import handlers
 from app.database.models import Base
 from app.utils.sheets import (
     GetAllParcelData, GetMailingMessage, GetNewAdress,
@@ -70,7 +68,7 @@ async def main():
     )
     scheduler.start()
 
-    dp.include_routers(admin.admin_router, user.router)
+    dp.include_routers(handlers.admin.router, handlers.user.router)
     await dp.start_polling(bot)
 
 
