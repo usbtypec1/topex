@@ -64,3 +64,17 @@ async def get_parcels(
             for parcel in parcels
         ]
     }
+
+
+
+class ParcelsGivenIn(BaseModel):
+    track_codes: set[str]
+
+
+@app.post('/parcels/given')
+async def add_parcel(
+        parcels_given_in: ParcelsGivenIn,
+        database_repository: DatabaseRepository = Depends(get_repository),
+):
+    print(parcels_given_in)
+    return 200
