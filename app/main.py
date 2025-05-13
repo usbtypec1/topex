@@ -17,11 +17,14 @@ from app.utils.sheets import (
     GetParcelsFromStorage, UpdateUserDataSheets,
 )
 from app.utils.strings import UpdateUserDiscount, UpdateUsersType
-from config import load_config
+from config import load_config, ROOT_PATH
 from middlewares import DatabaseRepositoryMiddleware
+from tasks.distribute_parcels import start_distribute_parcels_task
 
 
-async def scheduler_jobs(bot: Bot):
+async def scheduler_jobs(bot: Bot, session_factory: async_sessionmaker):
+    await start_distribute_parcels_task(session_factory)
+
     await GetMailingMessage(bot)
     await asyncio.sleep(5)
     await GetAllParcelData(bot)
@@ -43,13 +46,17 @@ async def on_shutdown(dispatcher: Dispatcher):
 async def main():
     logging.basicConfig(level=logging.INFO)
 
+    database_path = ROOT_PATH / 'DataBase.sqlite3'
+
     engine = create_async_engine(
-        "sqlite+aiosqlite:///../DataBase.sqlite3", echo=False
+        f"sqlite+aiosqlite:///{str(database_path)}", echo=False
     )
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
     session_factory = async_sessionmaker(engine)
+    await start_distribute_parcels_task(session_factory)
+    return
 
     config = load_config()
 
@@ -62,7 +69,11 @@ async def main():
     dp.shutdown.register(on_shutdown)
 
     scheduler = AsyncIOScheduler()
-    scheduler.add_job(scheduler_jobs, IntervalTrigger(minutes=1), args=(bot,))
+    scheduler.add_job(
+        scheduler_jobs,
+        IntervalTrigger(minutes=1),
+        args=(bot, session_factory),
+    )
     scheduler.add_job(
         UpdateUsersType, CronTrigger(day=1, hour=12, minute=0), args=(bot,)
     )

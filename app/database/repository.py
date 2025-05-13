@@ -3,7 +3,7 @@ import datetime
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.models import (
+from database.models import (
     Adress, FirstActivation,
     Managers, ParcelData, PickUpPoint, PromocodeData, SupportLinks, UserData,
     Verification,
@@ -333,6 +333,15 @@ class DatabaseRepository:
         await self._session.commit()
 
     # ПОСЫЛКИ
+
+    async def get_parcels_by_status(self, status: str) -> list[ParcelData]:
+        statement = (
+            select(ParcelData)
+            .where(ParcelData.status == status)
+            .order_by(ParcelData.datetime.desc())
+        )
+        result = await self._session.execute(statement)
+        return list(result.scalars().all())
 
     async def add_parcel(self, status, trackcode, uid, weight, date):
 

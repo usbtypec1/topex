@@ -13,7 +13,8 @@ from config import ROOT_PATH
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SAMPLE_SPREADSHEET_ID = "1gp3KJYHLHB4tOR-yJVPwTeUYmfBoLYZHuuSEYlvnyGg"
-creds = Credentials.from_service_account_file(ROOT_PATH / 'credentials.json', scopes=SCOPES)
+CREDENTIALS_FILE_PATH = ROOT_PATH / 'credentials.json'
+creds = Credentials.from_service_account_file(CREDENTIALS_FILE_PATH, scopes=SCOPES)
 
 
 async def GetNewAdress():
