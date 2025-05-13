@@ -1,4 +1,5 @@
 import datetime
+from collections.abc import Iterable
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -333,6 +334,14 @@ class DatabaseRepository:
         await self._session.commit()
 
     # ПОСЫЛКИ
+    async def edit_parcels_as_given(self, track_codes: Iterable[str]):
+        statement = (
+            update(ParcelData)
+            .where(ParcelData.trackcode.in_(track_codes))
+            .values(status='Отдан')
+        )
+        await self._session.execute(statement)
+        await self._session.commit()
 
     async def get_parcels_by_status(self, status: str) -> list[ParcelData]:
         statement = (

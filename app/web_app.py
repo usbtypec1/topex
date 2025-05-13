@@ -76,5 +76,5 @@ async def add_parcel(
         parcels_given_in: ParcelsGivenIn,
         database_repository: DatabaseRepository = Depends(get_repository),
 ):
-    print(parcels_given_in)
+    await database_repository.edit_parcels_as_given(parcels_given_in.track_codes)
     return 200
