@@ -6,7 +6,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.const import const_ru
 from app.config import load_config
-from database.queries import DatabaseRepository
+from database.repository import DatabaseRepository
 
 
 contact_kb = ReplyKeyboardMarkup(

@@ -6,7 +6,7 @@ from aiogram import Bot
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
-import app.database.queries as db
+import app.database.repository as db
 from app.utils.strings import clean_number
 from config import ROOT_PATH
 

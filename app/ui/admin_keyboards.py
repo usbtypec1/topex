@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.const import const_ru
-from database.queries import DatabaseRepository
+from database.repository import DatabaseRepository
 
 
 async def cancel(data: str):

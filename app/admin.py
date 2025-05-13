@@ -10,7 +10,7 @@ import ui.admin_keyboards as kb
 from app.const import const_ru
 from app.states import AddSupport, EditBalance, Verification
 from config import load_config
-from database.queries import DatabaseRepository
+from database.repository import DatabaseRepository
 
 
 admin_router = Router()

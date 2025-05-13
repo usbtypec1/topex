@@ -20,7 +20,7 @@ from app.utils.strings import (
     personal_disc, registration_text, user_info, user_personal_area,
     validate_and_format_phone,
 )
-from database.queries import DatabaseRepository
+from database.repository import DatabaseRepository
 from middlewares import AlbumMiddleware
 
 
